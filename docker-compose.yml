@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo-container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
   backend:
     build: ./backend
     container_name: backend-container
@@ -14,6 +22,7 @@ services:
       - /app/node_modules
     depends_on:
       - mongo
+    command: ["nodemon", "index.js"]
 
   frontend:
     build: ./frontend
@@ -25,14 +34,7 @@ services:
       - /app/node_modules
     depends_on:
       - backend
-
-  mongo:
-    image: mongo:6.0
-    container_name: mongo-container
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+    command: ["npm", "start"]
 
 volumes:
   mongo-data:
